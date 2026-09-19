@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>For You 💌</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: "Courier New", monospace;
+
+            background:
+                radial-gradient(circle at 20% 20%, #ffffff 0 2px, transparent 3px),
+                radial-gradient(circle at 80% 30%, #ffffff 0 2px, transparent 3px),
+                linear-gradient(135deg, #ffeaf1, #fff7ed);
+        }
+
+
+        /* ========================================
+           HATI DI BACKGROUND
+        ======================================== */
+
+        .floating-heart {
+            position: fixed;
+
+            color: #e66a8b;
+
+            opacity: 0.45;
+
+            pointer-events: none;
+
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        .heart1 {
+            left: 8%;
+            top: 15%;
+            font-size: 18px;
+        }
+
+        .heart2 {
+            right: 12%;
+            top: 20%;
+            font-size: 14px;
+
+            animation-delay: 1s;
+        }
+
+        .heart3 {
+            left: 15%;
+            bottom: 15%;
+            font-size: 15px;
+
+            animation-delay: 1.5s;
+        }
+
+        .heart4 {
+            right: 10%;
+            bottom: 13%;
+            font-size: 20px;
+
+            animation-delay: 0.5s;
+        }
+
+        @keyframes floating {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+        }
+
+
+        /* ========================================
+           HALAMAN AMPLOP
+        ======================================== */
+
+        #letter-screen {
+
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            position: fixed;
+
+            z-index: 10;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff0f5,
+                    #fff8ef
+                );
+
+            transition:
+                opacity 0.8s ease,
+                visibility 0.8s ease;
+        }
+
+
+        #letter-screen.hide {
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+        }
+
+
+        .letter-title {
+
+            color: #7b3049;
+
+            font-size: 18px;
+
+            margin-bottom: 30px;
+
+            animation:
+                titleFloat 2s ease-in-out infinite;
+        }
+
+
+        @keyframes titleFloat {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+        }
+
+
+        /* ========================================
+           AMPLOP
+        ======================================== */
+
+        .envelope {
+
+            width: 280px;
+
+            height: 190px;
+
+            position: relative;
+
+            cursor: pointer;
+
+            perspective: 1000px;
+        }
+
+
+        /* BADAN AMPLOP */
+
+        .envelope-body {
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 100%;
+
+            height: 140px;
+
+            background: #f5a7bc;
+
+            border: 3px solid #c96d88;
+
+            border-radius: 5px;
+
+            overflow: hidden;
+
+            z-index: 2;
+        }
+
+
+        /* LIPATAN KIRI */
+
+        .envelope-body::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 50%;
+
+            height: 100%;
+
+            background: #ed91aa;
+
+            clip-path: polygon(
+                0 0,
+                100% 100%,
+                0 100%
+            );
+        }
+
+
+        /* LIPATAN KANAN */
+
+        .envelope-body::after {
+
+            content: "";
+
+            position: absolute;
+
+            right: 0;
+
+            bottom: 0;
+
+            width: 50%;
+
+            height: 100%;
+
+            background: #e98ba5;
+
+            clip-path: polygon(
+                100% 0,
+                100% 100%,
+                0 100%
+            );
+        }
+
+
+        /* ========================================
+           PENUTUP AMPLOP
+        ======================================== */
+
+        .envelope-flap {
+
+            position: absolute;
+
+            left: 0;
+
+            top: 50px;
+
+            width: 100%;
+
+            height: 140px;
+
+            background: #f8b4c7;
+
+            border: 3px solid #c96d88;
+
+            clip-path: polygon(
+                0 0,
+                50% 70%,
+                100% 0
+            );
+
+            transform-origin: top center;
+
+            z-index: 4;
+
+            transition:
+                transform 0.9s ease;
+        }
+
+
+        /* ========================================
+           SURAT DI DALAM
+        ======================================== */
+
+        .paper {
+
+            position: absolute;
+
+            left: 15px;
+
+            bottom: 10px;
+
+            width: calc(100% - 30px);
+
+            height: 145px;
+
+            background: #fffdf7;
+
+            border: 2px solid #e2c9ce;
+
+            z-index: 1;
+
+            transition:
+                transform 1s ease,
+                bottom 1s ease;
+        }
+
+
+        .paper-heart {
+
+            position: absolute;
+
+            top: 35px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            color: #ef5278;
+
+            font-size: 35px;
+        }
+
+
+        /* ========================================
+           AMPLOP TERBUKA
+        ======================================== */
+
+        .envelope.open .envelope-flap {
+
+            transform: rotateX(180deg);
+
+            z-index: 1;
+        }
+
+
+        .envelope.open .paper {
+
+            bottom: 70px;
+
+            transform: translateY(-35px);
+
+            z-index: 5;
+        }
+
+
+        /* ========================================
+           TOMBOL BUKA
+        ======================================== */
+
+        .open-text {
+
+            margin-top: 35px;
+
+            color: #8a3a53;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            animation:
+                blink 1.5s ease-in-out infinite;
+        }
+
+
+        @keyframes blink {
+
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+
+        /* ========================================
+           HALAMAN PESAN
+        ======================================== */
+
+        #main-page {
+
+            opacity: 0;
+
+            transform: scale(0.9);
+
+            pointer-events: none;
+
+            transition:
+                opacity 1s ease,
+                transform 1s ease;
+        }
+
+
+        #main-page.show {
+
+            opacity: 1;
+
+            transform: scale(1);
+
+            pointer-events: auto;
+        }
+
+
+        /* ========================================
+           WINDOW
+        ======================================== */
+
+        .window {
+
+            width: min(390px, 88vw);
+
+            background: #ffd9e4;
+
+            border: 3px solid #d8849d;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 18px 45px
+                rgba(156, 76, 103, 0.25);
+        }
+
+
+        /* TITLE BAR */
+
+        .titlebar {
+
+            height: 36px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 10px;
+
+            background: #f4a9bd;
+
+            color: #64283b;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        .dots {
+
+            display: flex;
+
+            gap: 5px;
+        }
+
+
+        .dots span {
+
+            width: 10px;
+
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #fff0f4;
+
+            border: 1px solid #b85f7d;
+        }
+
+
+        /* TOOLBAR */
+
+        .toolbar {
+
+            height: 34px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 18px;
+
+            background: #ffc7d7;
+
+            color: #b83f65;
+
+            border-bottom: 2px solid #e59aae;
+        }
+
+
+        .toolbar span {
+
+            animation:
+                pulse 1.4s ease-in-out infinite;
+        }
+
+
+        .toolbar span:nth-child(2) {
+
+            animation-delay: 0.2s;
+        }
+
+
+        .toolbar span:nth-child(3) {
+
+            animation-delay: 0.4s;
+        }
+
+
+        @keyframes pulse {
+
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.25);
+            }
+
+        }
+
+
+        /* ========================================
+           CONTENT
+        ======================================== */
+
+        .content {
+
+            padding: 25px 22px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.28) 50%,
+                    transparent 50%
+                ) 0 0 / 16px 16px,
+
+                linear-gradient(
+                    rgba(255,255,255,.28) 50%,
+                    transparent 50%
+                ) 0 0 / 16px 16px,
+
+                #f8bfd0;
+        }
+
+
+        h1 {
+
+            margin: 0 0 12px;
+
+            color: #65263a;
+
+            font-size: 19px;
+
+            line-height: 1.4;
+        }
+
+
+        .question {
+
+            margin-bottom: 18px;
+
+            color: #7a3049;
+
+            font-size: 15px;
+
+            font-weight: bold;
+        }
+
+
+        /* ========================================
+           KUCING
+        ======================================== */
+
+        .cat {
+
+            width: 112px;
+
+            height: 92px;
+
+            margin:
+                0 auto 20px;
+
+            position: relative;
+
+            background: #25212a;
+
+            border-radius:
+                24px 24px 30px 30px;
+        }
+
+
+        .cat::before,
+        .cat::after {
+
+            content: "";
+
+            position: absolute;
+
+            top: -18px;
+
+            width: 28px;
+
+            height: 32px;
+
+            background: #25212a;
+
+            border-radius:
+                6px 6px 2px 2px;
+                animation: catHead 2s ease-in-out infinite;
+                transform-origin: center bottom;
+        }
+
+
+        .cat::before {
+
+            left: 8px;
+
+            transform:
+                rotate(-10deg);
+        }
+
+
+        .cat::after {
+
+            right: 8px;
+
+            transform:
+                rotate(10deg);
+        }
+
+
+        .eye {
+
+            position: absolute;
+
+            top: 30px;
+
+            width: 23px;
+
+            height: 27px;
+
+            background: white;
+
+            border:
+                5px solid #25212a;
+
+            border-radius: 4px;
+        }
+
+
+        .eye::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 7px;
+
+            height: 11px;
+
+            background: #25212a;
+
+            left: 3px;
+
+            top: 3px;
+        }
+
+
+        .eye.left {
+            left: 18px;
+        }
+
+
+        .eye.right {
+            right: 18px;
+        }
+
+
+        .nose {
+
+            position: absolute;
+
+            top: 53px;
+
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            color: #f24d6d;
+        }
+
+
+        .heart-in-cat {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 48px;
+
+            transform:
+                translateX(-50%);
+
+            color: #ff3f64;
+
+            font-size: 27px;
+
+            animation:
+                catHeart 1.2s ease-in-out infinite;
+        }
+
+
+        @keyframes catHead {
+    0%, 100% {
+        transform: rotate(0deg) translateY(0);
+    }
+
+    25% {
+        transform: rotate(-5deg) translateY(-2px);
+    }
+
+    50% {
+        transform: rotate(5deg) translateY(0);
+    }
+
+    75% {
+        transform: rotate(-3deg) translateY(-1px);
+    }
+}
+
+
+        /* ========================================
+           BUTTON
+        ======================================== */
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 15px;
+
+            min-height: 55px;
+        }
+
+
+        button {
+
+            border:
+                2px solid #bd6681;
+
+            border-radius: 7px;
+
+            background: white;
+
+            color: #8d304f;
+
+            padding:
+                11px 22px;
+
+            font-family: inherit;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 4px 0 #c77a91;
+        }
+
+
+        #yes {
+
+            min-width: 90px;
+        }
+
+
+        #no {
+
+            min-width: 60px;
+
+            position: relative;
+        }
+
+
+        .result {
+
+            display: none;
+
+            margin-top: 12px;
+
+            color: #7a2948;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        .result.show {
+
+            display: block;
+
+            animation:
+                appear 0.5s ease;
+        }
+
+
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =====================================
+         HATI BACKGROUND
+    ====================================== -->
+
+    <div class="floating-heart heart1">♥</div>
+
+    <div class="floating-heart heart2">♥</div>
+
+    <div class="floating-heart heart3">♥</div>
+
+    <div class="floating-heart heart4">♥</div>
+
+
+    <!-- =====================================
+         AMPLOP / SURAT
+    ====================================== -->
+
+    <div id="letter-screen">
+
+
+        <div class="letter-title">
+            You have a little letter 💌
+        </div>
+
+
+        <div
+            class="envelope"
+            id="envelope"
+            onclick="openLetter()"
+        >
+
+
+            <!-- KERTAS -->
+
+            <div class="paper">
+
+                <div class="paper-heart">
+                    ♥
+                </div>
+
+            </div>
+
+
+            <!-- BADAN AMPLOP -->
+
+            <div class="envelope-body"></div>
+
+
+            <!-- PENUTUP -->
+
+            <div class="envelope-flap"></div>
+
+
+        </div>
+
+
+        <div class="open-text">
+            Klik amplop untuk membuka 💗
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================
+         HALAMAN UTAMA
+    ====================================== -->
+
+    <div id="main-page">
+
+
+        <div class="window">
+
+
+            <!-- TITLE -->
+
+            <div class="titlebar">
+
+                <span>
+                    LOVE
+                </span>
+
+                <div class="dots">
+
+                    <span></span>
+
+                    <span></span>
+
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <!-- BAR -->
+
+            <div class="toolbar">
+
+                <span>♥</span>
+
+                <span>♥</span>
+
+                <span>♥</span>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="content">
+
+
+                <h1>
+                    Happy 1 month, Masih Ingat Aku ♡
+                </h1>
+
+
+                <div class="question">
+                    Kenangan Yang Terlupakan
+                </div>
+
+
+                <!-- KUCING -->
+
+                <div class="cat">
+
+                    <div class="eye left"></div>
+
+                    <div class="eye right"></div>
+
+                    <div class="nose">
+                        ⌣
+                    </div>
+
+                    <div class="heart-in-cat">
+                        ♥
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <div class="buttons">
+
+                    <button id="yes">
+                        YES
+                    </button>
+
+                    <button id="no">
+                        NO
+                    </button>
+
+                </div>
+
+
+                <!-- HASIL -->
+
+                <div
+                    id="result"
+                    class="result"
+                >
+                    See You!Thanks Dafid Alfatih -23- 💗
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        /* =====================================
+           BUKA SURAT
+        ====================================== */
+
+        function openLetter() {
+
+            const envelope =
+                document.getElementById(
+                    "envelope"
+                );
+
+            const letterScreen =
+                document.getElementById(
+                    "letter-screen"
+                );
+
+            const mainPage =
+                document.getElementById(
+                    "main-page"
+                );
+
+
+            /* Buka amplop */
+
+            envelope.classList.add(
+                "open"
+            );
+
+
+            /*
+                Tunggu animasi amplop
+                selesai sebelum menampilkan
+                pesan.
+            */
+
+            setTimeout(() => {
+
+                letterScreen.classList.add(
+                    "hide"
+                );
+
+                mainPage.classList.add(
+                    "show"
+                );
+
+            }, 1400);
+
+        }
+
+
+
+        /* =====================================
+           TOMBOL YES
+        ====================================== */
+
+        const yes =
+            document.getElementById(
+                "yes"
+            );
+
+        const result =
+            document.getElementById(
+                "result"
+            );
+
+
+        yes.addEventListener(
+            "click",
+            () => {
+
+                result.classList.add(
+                    "show"
+                );
+
+                yes.textContent =
+                    "YES! 💗";
+
+            }
+        );
+
+
+
+        /* =====================================
+           TOMBOL NO MENGHINDAR
+        ====================================== */
+
+        const no =
+            document.getElementById(
+                "no"
+            );
+
+
+        no.addEventListener(
+            "mouseenter",
+            moveNo
+        );
+
+
+        no.addEventListener(
+            "click",
+            moveNo
+        );
+
+
+        function moveNo() {
+
+            const x =
+                Math.random() * 140 - 70;
+
+            const y =
+                Math.random() * 100 - 50;
+
+
+            no.style.transform =
+                `translate(${x}px, ${y}px)`;
+
+        }
+
+    </script>
+
+</body>
+</html>
